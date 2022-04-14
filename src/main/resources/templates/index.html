@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html   lang="ko"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <h1>Home</h1>
+    <a th:href="@{/user}">유저 페이지로</a>
+    <a th:href="@{/admin}">관리자 페이지로</a>
+
+    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+        <button type="submit">로그아웃</button>
+    </form>
+</body>
+</html>
