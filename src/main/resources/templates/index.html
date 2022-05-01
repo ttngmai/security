@@ -12,6 +12,7 @@
     <h1>Home</h1>
     <a th:href="@{/user}">유저 페이지로</a>
     <a th:href="@{/admin}">관리자 페이지로</a>
+    <a th:href="@{/excel}">엑셀 다운로드</a>
 
     <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
         <button type="submit">로그아웃</button>

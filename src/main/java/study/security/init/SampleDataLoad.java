@@ -10,6 +10,8 @@ import study.security.repository.*;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -32,6 +34,8 @@ public class SampleDataLoad {
         private final AccountRoleRepository accountRoleRepository;
         private final ResourcesRepository resourcesRepository;
         private final RoleResourceRepository roleResourceRepository;
+        private final PostRepository postRepository;
+        private final CommentRepository commentRepository;
         private final PasswordEncoder passwordEncoder;
 
         @Transactional
@@ -54,6 +58,26 @@ public class SampleDataLoad {
             if (roleResourceRepository.findAll().size() == 0) {
                 createRoleResource(roleUser, resource1);
                 createRoleResource(roleAdmin, resource2);
+            }
+
+            for (int i = 1; i <= 100; i++) {
+                List<Comment> comments = new ArrayList<>();
+
+                comments.add(createCommentIfNotFound(i + "번 게시글의 댓글 1"));
+                comments.add(createCommentIfNotFound(i + "번 게시글의 댓글 2"));
+
+                createPostIfNotFound("게시글 제목 " + i, "게시글 내용 " + i, comments);
+            }
+
+            for (int i = 101; i <= 150; i++) {
+                List<Comment> comments = new ArrayList<>();
+
+                comments.add(createCommentIfNotFound(i + "번 게시글의 댓글 1"));
+                createPostIfNotFound("게시글 제목 " + i, "게시글 내용 " + i, comments);
+            }
+
+            for (int i = 151; i <= 200; i++) {
+                createPostIfNotFound("게시글 제목 " + i, "게시글 내용 " + i, null);
             }
         }
 
@@ -117,6 +141,34 @@ public class SampleDataLoad {
             roleResource.setResources(resources);
 
             em.persist(roleResource);
+        }
+
+        @Transactional
+        public Post createPostIfNotFound(String title, String content, List<Comment> comments) {
+            Post post = postRepository.findByTitle(title);
+
+            if (post == null) {
+                post = Post.builder()
+                        .title(title)
+                        .content(content)
+                        .comments(comments)
+                        .build();
+            }
+
+            return postRepository.save(post);
+        }
+
+        @Transactional
+        private Comment createCommentIfNotFound(String content) {
+            Comment comment = commentRepository.findByContent(content);
+
+            if (comment == null) {
+                comment = Comment.builder()
+                        .content(content)
+                        .build();
+            }
+
+            return commentRepository.save(comment);
         }
     }
 }

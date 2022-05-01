@@ -14,6 +14,8 @@ public interface AccountMapper {
 
     Account detailDtoToEntity(AccountDetailDto accountDetailDto);
 
+    List<AccountDto> entitiesToDtos(List<Account> accounts);
+
     AccountDto entityToDto(Account account);
 
     AccountDetailDto entityToDetailDto(Account account, List<String> roleNames);
