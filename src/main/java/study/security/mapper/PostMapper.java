@@ -1,17 +1,29 @@
 package study.security.mapper;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import study.security.dto.post.PostDetailDto;
 import study.security.entity.Post;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = { CommentMapper.class })
+@Mapper(componentModel = "spring")
 public interface PostMapper {
-    @Mapping(target="comment1Content", expression="java(post.getComments() != null && post.getComments().size() >= 1 ? post.getComments().get(0).getContent() : null)")
-    @Mapping(target="comment2Content", expression="java(post.getComments() != null && post.getComments().size() >= 2 ? post.getComments().get(1).getContent() : null)")
     PostDetailDto entityToDetailDto(Post post);
 
     List<PostDetailDto> entitiesToDetailDtos(List<Post> posts);
+
+    @AfterMapping
+    default void setAfter(@MappingTarget PostDetailDto dto, Post post) {
+        if (post.getComments() != null) {
+            if (post.getComments().size() >= 1) {
+                dto.setComment1Content(post.getComments().get(0).getContent());
+            }
+
+            if (post.getComments().size() >= 2) {
+                dto.setComment2Content(post.getComments().get(1).getContent());
+            }
+        }
+    }
 }

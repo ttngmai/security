@@ -17,12 +17,11 @@ import java.util.List;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "POST_SEQ_GEN")
-    private Long id;
+    private Long postId;
 
     private String title;
     private String content;
 
-    @BatchSize(size = 100)
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private List<Comment> comments;

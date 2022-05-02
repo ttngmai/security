@@ -41,6 +41,8 @@ public final class OneSheetExcelFile<T> extends SXSSFExcelFile<T> {
 
     @Override
     public void addRows(List<T> data) {
-        renderBody(data, currentRowIndex++, COLUMN_START_INDEX);
+        for (Object renderedData : data) {
+            renderBody(renderedData, currentRowIndex++, COLUMN_START_INDEX);
+        }
     }
 }

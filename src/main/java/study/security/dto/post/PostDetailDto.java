@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import study.security.dto.CommentDto;
 import study.security.excel.ExcelColumn;
-
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +12,7 @@ import java.util.List;
 @Setter
 public class PostDetailDto {
     @ExcelColumn(headerName = "아이디")
-    private Long id;
+    private Long postId;
 
     @ExcelColumn(headerName = "게시글 제목")
     private String title;
