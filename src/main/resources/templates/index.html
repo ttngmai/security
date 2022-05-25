@@ -5,7 +5,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
     <title>Title</title>
+    <script defer th:src="@{/js/alpine.min.js}"></script>
 </head>
 
 <body>
@@ -14,8 +17,52 @@
     <a th:href="@{/admin}">관리자 페이지로</a>
     <a th:href="@{/excel}">엑셀 다운로드</a>
 
+    <div x-data="listBtn()">
+<!--        <label for="title">제목</label>-->
+<!--        <input x-model="formData.title" id="title">-->
+<!--        <label for="content">내용</label>-->
+<!--        <input x-model="formData.content" id="content">-->
+        <button  @click="list()">리스트 요청</button>
+
+        <pre x-text="JSON.stringify(formData, undefined, 4)"></pre>
+        <pre x-text="JSON.stringify(responseData, undefined, 4)"></pre>
+    </div>
+
     <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
         <button type="submit">로그아웃</button>
     </form>
+
+    <script>
+        const header = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+        const token = document.querySelector("meta[name='_csrf']").getAttribute("content");
+
+        function listBtn() {
+            return {
+                formData: [{
+                    title: "제목1",
+                    content: "내용1"
+                }, {
+                    title: "제목2",
+                    content: "내용2"
+                }],
+                responseData: {},
+                list() {
+                    fetch("/posts", {
+                        method: "POST",
+                        headers: {
+                            [header]: token,
+                            "Content-Type": "application/json; charset=UTF-8"
+                        },
+                        body: JSON.stringify({formData: this.formData})
+                    })
+                        .then((response) => response.json())
+                        .then((result) => {
+                            console.log(result)
+                            this.responseData = result;
+                        });
+                }
+            }
+        }
+    </script>
 </body>
 </html>

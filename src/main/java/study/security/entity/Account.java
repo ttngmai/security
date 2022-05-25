@@ -1,5 +1,6 @@
 package study.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class Account implements Serializable {
     private String username;
     private String password;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
     private Set<AccountRole> accountRoles = new HashSet<>();
 }
